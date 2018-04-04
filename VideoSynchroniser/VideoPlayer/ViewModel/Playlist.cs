@@ -30,7 +30,7 @@ namespace VideoPlayer.ViewModel
         #region Constructor(s)
         public Playlist()
         {
-            _service = new ServiceReference.MediaSupplierClient();
+            _service = new ServiceReference.MediaSupplierClient(MediaSupplierClient.EndpointConfiguration.BasicHttpBinding_IMediaSupplier, "http://dev-pc10-win10.ad.beyontics.de:8523/VideoSynchroniser/service/");
         }
         #endregion
 
@@ -38,6 +38,12 @@ namespace VideoPlayer.ViewModel
         protected virtual void RaisePropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public async Task Initialise()
+        {
+            _playList = new ObservableCollection<MediaItem>(await RetrieveLocalItemsAsync());
+            NextItem();
         }
 
         public void NextItem()
@@ -74,18 +80,25 @@ namespace VideoPlayer.ViewModel
 
             foreach (MediaItem serverItem in serverItems.Where(i => localItems.Any(x => x.Name == i.Name) == false))
             {
-                // Copy the item to the local server.
-                byte[] transferredData = await _service.OpenTransferStreamAsync(serverItem);
-                await SaveItemToLocalStorage(serverItem, transferredData);
+                try
+                {
+                    // Copy the item to the local server.
+                    byte[] transferredData = await _service.OpenTransferStreamAsync(serverItem);
+                    await SaveItemToLocalStorage(serverItem, transferredData);
+                }
+                catch
+                {
+                    // TODO: Something - anything
+                }
             }
 
-            // All server items are now local.
+
             // Delete the local items that are no longer on the server.
             for (int index = localItems.Count - 1; index >= 0; index--)
             {
                 MediaItem candidateItem = localItems[index];
                 // Don't delete the currently playing item!
-                if (candidateItem.Equals(_currentlyPlayingItem))
+                if (_currentlyPlayingItem != null && candidateItem.Name == _currentlyPlayingItem.Name)
                 {
                     continue;
                 }

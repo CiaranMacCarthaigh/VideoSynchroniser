@@ -6,14 +6,26 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:converters="using:VideoPlayer.Converter"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:playback="using:Windows.Media.Playback"
     Loaded="Page_Loaded"
     mc:Ignorable="d">
     <Page.Resources>
         <converters:MediaItemMediaSourceConverter x:Key="MediaItemMediaSourceConverter" />
+        <Storyboard x:Key="TextFadeInAnimation" Completed="Storyboard_Completed">
+            <DoubleAnimation Storyboard.TargetName="dspCurrentlyPlayingName" Storyboard.TargetProperty="Opacity" From="0" To="1" BeginTime="00:00:00" Duration="00:00:02" />
+            <!--<DoubleAnimation Storyboard.TargetName="tblCurrentlyPlayingName" Storyboard.TargetProperty="Opacity" From="0" To="1" BeginTime="00:00:00" Duration="00:00:02" />-->
+        </Storyboard>
+        <Storyboard x:Key="TextFadeOutAnimation">
+            <DoubleAnimation Storyboard.TargetName="dspCurrentlyPlayingName" Storyboard.TargetProperty="Opacity" From="1" To="0" BeginTime="00:00:05" Duration="00:00:02" />
+            <!--<DoubleAnimation Storyboard.TargetName="tblCurrentlyPlayingName" Storyboard.TargetProperty="Opacity" From="0" To="1" BeginTime="00:00:00" Duration="00:00:02" />-->
+        </Storyboard>
     </Page.Resources>
 
     <Grid Background="Black">
         <MediaPlayerElement Name="MediaPlayer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="{Binding Path=CurrentlyPlayingItem, Converter={StaticResource MediaItemMediaSourceConverter}}" AutoPlay="True" />
+        <controls:DropShadowPanel Name="dspCurrentlyPlayingName" Margin="12" VerticalAlignment="Bottom" HorizontalAlignment="Left" BlurRadius="4.0" ShadowOpacity="0.70">
+            <TextBlock Name="tblCurrentlyPlayingName" Text="{Binding Path=CurrentlyPlayingItem.Name}" Foreground="White" FontSize="60" FontFamily="Arial" TextWrapping="NoWrap" />
+        </controls:DropShadowPanel>
     </Grid>
 </Page>

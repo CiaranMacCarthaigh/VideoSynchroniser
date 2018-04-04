@@ -4,6 +4,7 @@ using Windows.Media.Playback;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Animation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -20,10 +21,22 @@ namespace VideoPlayer
         {
             this.InitializeComponent();
             DataContext = new Playlist();
+            Playlist.PropertyChanged += Playlist_PropertyChanged;
+
+            Window.Current.CoreWindow.PointerCursor = null;
 
             _timer = new DispatcherTimer();
             _timer.Interval = TimeSpan.FromSeconds(5);
             _timer.Tick += _timer_Tick;
+        }
+
+        private void Playlist_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "CurrentlyPlayingItem")
+            {
+                Storyboard storyboard = (Storyboard)this.Resources["TextFadeInAnimation"];
+                storyboard.Begin();
+            }
         }
 
         private async void _timer_Tick(object sender, object e)
@@ -56,10 +69,11 @@ namespace VideoPlayer
             }
         }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             MediaPlayer.MediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
             MediaPlayer.MediaPlayer.MediaFailed += MediaPlayer_MediaFailed;
+            await Playlist.Initialise();
             _timer.Start();
         }
 
@@ -78,6 +92,12 @@ namespace VideoPlayer
             {
                 Playlist.NextItem();
             });
+        }
+
+        private void Storyboard_Completed(object sender, object e)
+        {
+            Storyboard storyboard = (Storyboard)this.Resources["TextFadeOutAnimation"];
+            storyboard.Begin();
         }
     }
 }
