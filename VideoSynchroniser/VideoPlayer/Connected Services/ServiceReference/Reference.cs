@@ -17,7 +17,7 @@ namespace VideoPlayer.ServiceReference {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="MediaItem", Namespace="http://schemas.datacontract.org/2004/07/Media")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="MediaItem", Namespace="http://schemas.datacontract.org/2004/07/VideoSynchroniserService.WCF")]
     public partial class MediaItem : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string NameField;

@@ -37,6 +37,7 @@
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Web" />
@@ -59,6 +60,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WCF\IMediaSupplier.cs" />
+    <Compile Include="WCF\MediaItem.cs" />
     <Compile Include="WCF\MediaSupplier.cs" />
     <Compile Include="WCF\ServerUrls.cs" />
     <Compile Include="WindowsServiceInstaller.cs">
@@ -67,12 +69,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Media\Media.csproj">
-      <Project>{AE7B6BB1-EE1E-4A34-A49C-A229A74F5E1F}</Project>
-      <Name>Media</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -1,8 +1,8 @@
-﻿using System.Configuration;
+﻿using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.ServiceModel;
-using Media;
 
 namespace VideoSynchroniserService.WCF
 {
@@ -19,13 +19,14 @@ namespace VideoSynchroniserService.WCF
         public MediaItem[] RetrieveMediaItems()
         {
             FileInfo[] files = GetFiles();
-            return files.Select(i => new MediaItem(i.Name)).ToArray();
+            IEnumerable<MediaItem> items = files.Select(i => new MediaItem(i.Name));
+            return items.ToArray();
         }
 
         private FileInfo[] GetFiles()
         {
             DirectoryInfo folder = new DirectoryInfo(FolderPath);
-            FileInfo[] files = folder.GetFiles("*.avi");
+            FileInfo[] files = folder.GetFiles("*.mp4");
             return files;
         }
 

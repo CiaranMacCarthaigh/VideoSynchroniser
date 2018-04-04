@@ -5,9 +5,15 @@
     xmlns:local="using:VideoPlayer"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converters="using:VideoPlayer.Converter"
+    xmlns:playback="using:Windows.Media.Playback"
+    Loaded="Page_Loaded"
     mc:Ignorable="d">
+    <Page.Resources>
+        <converters:MediaItemMediaSourceConverter x:Key="MediaItemMediaSourceConverter" />
+    </Page.Resources>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    <Grid Background="Black">
+        <MediaPlayerElement Name="MediaPlayer" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="{Binding Path=CurrentlyPlayingItem, Converter={StaticResource MediaItemMediaSourceConverter}}" AutoPlay="True" />
     </Grid>
 </Page>

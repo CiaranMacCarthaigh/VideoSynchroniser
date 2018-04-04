@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using VideoPlayer.ViewModel;
+using Windows.Media.Playback;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -22,9 +14,70 @@ namespace VideoPlayer
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private DispatcherTimer _timer;
+
         public MainPage()
         {
             this.InitializeComponent();
+            DataContext = new Playlist();
+
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromSeconds(5);
+            _timer.Tick += _timer_Tick;
+        }
+
+        private async void _timer_Tick(object sender, object e)
+        {
+            _timer.Stop();
+            try
+            {
+                await Playlist.UpdatePlaylistAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageDialog dialog = new MessageDialog(ex.ToString());
+                await dialog.ShowAsync();
+            }
+            finally
+            {
+                _timer.Start();
+            }
+        }
+
+        private Playlist Playlist
+        {
+            get
+            {
+                return DataContext as Playlist;
+            }
+            set
+            {
+                DataContext = value;
+            }
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            MediaPlayer.MediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
+            MediaPlayer.MediaPlayer.MediaFailed += MediaPlayer_MediaFailed;
+            _timer.Start();
+        }
+
+        private async void MediaPlayer_MediaFailed(MediaPlayer sender, MediaPlayerFailedEventArgs args)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            {
+                MessageDialog dialog = new MessageDialog(args.Error.ToString());
+                await dialog.ShowAsync();
+            });
+        }
+
+        private async void MediaPlayer_MediaEnded(MediaPlayer sender, object args)
+        {
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                Playlist.NextItem();
+            });
         }
     }
 }

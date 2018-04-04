@@ -4,7 +4,7 @@
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
       <xsd:import schemaLocation="http://localhost:8523/VideoSynchroniser/service/?xsd=xsd0" namespace="http://tempuri.org/" />
       <xsd:import schemaLocation="http://localhost:8523/VideoSynchroniser/service/?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-      <xsd:import schemaLocation="http://localhost:8523/VideoSynchroniser/service/?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Media" />
+      <xsd:import schemaLocation="http://localhost:8523/VideoSynchroniser/service/?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/VideoSynchroniserService.WCF" />
       <xsd:import schemaLocation="http://localhost:8523/VideoSynchroniser/service/?xsd=xsd3" namespace="http://schemas.microsoft.com/Message" />
     </xsd:schema>
   </wsdl:types>
